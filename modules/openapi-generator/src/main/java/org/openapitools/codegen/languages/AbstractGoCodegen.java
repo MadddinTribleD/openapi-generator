@@ -507,6 +507,7 @@ public abstract class AbstractGoCodegen extends DefaultCodegen implements Codege
         }
 
         boolean addedTimeImport = false;
+        boolean addedUUIDImports = false;
         boolean addedOSImport = false;
         boolean addedReflectImport = false;
         for (CodegenOperation operation : operations) {
@@ -520,6 +521,12 @@ public abstract class AbstractGoCodegen extends DefaultCodegen implements Codege
                 if (!addedOSImport && "*os.File".equals(param.dataType)) {
                     imports.add(createMapping("import", "os"));
                     addedOSImport = true;
+                }
+
+                // import "github.com/google/uuid" if the operation uses uuids
+                if (!addedUUIDImports && "uuid.UUID".equals(param.dataType)) {
+                    imports.add(createMapping("import", "github.com/google/uuid"));
+                    addedUUIDImports = true;
                 }
 
                 // import "time" if the operation has a time parameter.
@@ -617,6 +624,7 @@ public abstract class AbstractGoCodegen extends DefaultCodegen implements Codege
         for (ModelMap m : objs.getModels()) {
             boolean addedTimeImport = false;
             boolean addedOSImport = false;
+            boolean addedUUIDImport = false;
             CodegenModel model = m.getModel();
 
             List<CodegenProperty> inheritedProperties = new ArrayList<>();
@@ -649,6 +657,11 @@ public abstract class AbstractGoCodegen extends DefaultCodegen implements Codege
                         (cp.items != null && "*os.File".equals(cp.items.dataType)))) {
                     imports.add(createMapping("import", "os"));
                     addedOSImport = true;
+                }
+                if (!addedUUIDImport && ("uuid.UUID".equals(cp.dataType) ||
+                        (cp.items != null && "uuid.UUID".equals(cp.items.dataType)))) {
+                    imports.add(createMapping("import", "github.com/google/uuid"));
+                    addedUUIDImport = true;
                 }
             }
             if (this instanceof GoClientCodegen && model.isEnum) {
