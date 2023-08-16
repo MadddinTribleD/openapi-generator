@@ -114,7 +114,7 @@ public abstract class AbstractGoCodegen extends DefaultCodegen implements Codege
         typeMapping.put("decimal", "float64");
         typeMapping.put("boolean", "bool");
         typeMapping.put("string", "string");
-        typeMapping.put("UUID", "string");
+        typeMapping.put("UUID", "uuid.UUID");
         typeMapping.put("URI", "string");
         typeMapping.put("date", "string");
         typeMapping.put("DateTime", "time.Time");
